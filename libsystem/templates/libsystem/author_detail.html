@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+<h1>Author: {{ author }} </h1>
+
+<h4>Books</h4>
+<div style="margin-left:20px;margin-top:20px">
+<dl>
+{% for book in author.book_set.all %}
+  <dt><a href="{% url 'book-detail' book.pk %}">{{book}}</a> ({{book.bookrental_set.all.count}})</dt>
+  <dd>{{book.summary}}</dd>
+{% endfor %}
+</dl>
+
+</div>
+{% endblock %}
+
+</body>

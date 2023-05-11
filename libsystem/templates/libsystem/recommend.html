@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+<!-- List genres in scroll view-->
+{% block content %}
+  <h1>Recommendation</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }} <!-- renders form as para tags-->
+    <button type="submit">Submit</button>
+  </form>
+  {% if recommended_books %}
+    <h3>Recommended Books:</h3>
+    <ul>
+      {% for book in recommended_books %}
+        <li>{{ book.title }} by {{ book.author }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if message %}
+    <p>{{ message }}</p>
+  {% endif %}
+{% endblock %}
+
+
+
+
+

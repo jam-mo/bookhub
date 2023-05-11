@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Title: {{ book.title }}</h1>
+
+<p><strong>Author:</strong> <a href="{% url 'author-detail' book.author.pk %}">{{ book.author }}</a></p>
+<p><strong>Publisher:</strong> {{ book.publisher }}</p>
+<p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
+<p><strong>Ratings:</strong> {{ book.ratings }}</p>
+
+<div style="margin-left:20px;margin-top:20px" class="container mt-5">
+
+
+
+     <!-- display related books -->
+    {% if related_books %}
+    <h4>Related Books</h4>
+    <ul>
+        {% for book in related_books %}
+        <li><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+<!--fix bookrental, se -->
+    {% for copy in book.bookrental_set.all %}
+    <hr>
+    <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}">
+        {{ copy.get_status_display }}
+    </p>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'book_rate' book.pk %}">
+    {% csrf_token %}
+    {{ rating_form.as_p }}
+    <button type="submit">Rate Book</button>
+</form>
+    {% if copy.loanee == user %}
+    {% if copy.status != 'a' %}
+    <form method="post" action="{% url 'return_book' copy.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Return Book</button>
+    </form>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% if copy.status != 'a' %}
+    <p><strong>Due to be returned:</strong> {{ copy.due_date }}</p>
+    {% endif %}
+
+    <p class="text-muted"><strong>Id:</strong> {{ copy.id }}</p>
+
+    {% if user.is_authenticated and copy.status == 'a' %}
+    <form method="post" action="{% url 'loan_book' book.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Loan Book</button>
+    </form>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ user.fullname }} Profile</h1>
+<p>Email: {{ user.email }}</p>
+<p>First Name: {{ user.first_name }}</p>
+<p>Last Name: {{ user.last_name }}</p>
+
+
+<h2>Challenges</h2>
+<p>Number of books to read: {{ user.challenges }}</p>
+<form method="post" action="{% url 'profile' %}">
+    {% csrf_token %}
+    <label for="challenges">Set a challenge: </label>
+    <input type="number" id="challenges" name="challenges" min="0" value="{{ user.challenges }}">
+    <button type="submit">Update</button>
+</form>
+<h2>Progress</h2>
+<p>Number of books finished: {{ user.progress }}</p>
+<form method="post" action="{% url 'profile' %}">
+    {% csrf_token %}
+    <label for="progress">Update progress: </label>
+    <input type="number" id="progress" name="progress" min="0" value="{{ user.progress }}">
+    <button type="submit">Update</button>
+</form>
+{% if user.challenges == user.progress %}
+<p>Congratulations! You have completed your challenges.</p>
+{% endif %}
+
+<h2>Borrowed books: </h2>
+<ul>
+    {% for book_rental in user.bookrental_set.all %}
+    <li>{{ book_rental.book.title }} - {{ book_rental.status }}</li>
+    {% empty %}
+    <li>No Books rented yet.</li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}
+

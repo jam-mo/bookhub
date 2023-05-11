@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+   <div class="p-5 p-md-4 mb-5 rounded " style="background-color: #A09B9B">
+    <div class="col-md-6 px-0">
+      <h1 class="display-4 fst-italic">Welcome To BookHub!</h1>
+      <p class="lead my-3">We currently have:</p>
+      <ul>
+    <li><strong>Books:</strong> {{ books_count }}</li>
+    <li><strong>Authors:</strong> {{ authors_count }}</li>
+      <li><strong>Genres:</strong> {{ genres_count }}</li>
+  </ul>
+    </div>
+  </div>
+
+
+    <div class="row d-flex align-items-stretch" >
+    {% for book in popular_books %}
+      <div class="col-md-4 mb-3 ">
+        <div class="card text-white mb-4" style="max-width: 20rem;background-color: #A09B9B;">
+          <div class="card-header">{{ book.author.fullname }}</div>
+          <div class="card-body">
+            <h4 class="card-title"> {{ book.title }}</h4>
+            <p class="card-text">{{ book.ratings }} ({{ book.ratings_count }} ratings)</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+
